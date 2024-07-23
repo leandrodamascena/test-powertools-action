@@ -38,6 +38,12 @@ jobs:
       pages: none
       pull-requests: none
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.8", "3.9"]
+    env:
+      PYTHON: "${{ matrix.python-version }}"
     defaults:
       run:
         working-directory: ./layer
@@ -52,11 +58,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: "16.12"
+          node-version: "18.20.4"
       - name: Setup python
         uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
           cache: "pip"
       - name: Resolve and install project dependencies
         # CDK spawns system python when compiling stack
