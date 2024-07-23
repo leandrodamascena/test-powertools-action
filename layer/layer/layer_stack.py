@@ -14,7 +14,7 @@ from aws_cdk import (
 )
 from aws_cdk.aws_lambda import Architecture, CfnLayerVersionPermission
 from aws_cdk.aws_ssm import StringParameter
-from cdk_aws_lambda_powertools_layer import LambdaPowertoolsLayer
+from leo_cdk_aws_lambda_powertools_layer import LambdaPowertoolsLayer
 from constructs import Construct
 
 
