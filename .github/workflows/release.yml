@@ -91,7 +91,7 @@ jobs:
       #  run: sleep 60
 
       - name: CDK build
-        run: npx cdk synth --verbose --context version="2.50" -o cdk.out
+        run: npx cdk synth --verbose --context version="2.40" -o cdk.out
       - name: zip output
         run: zip -r cdk.out.zip cdk.out
       #- name: Archive CDK artifacts
