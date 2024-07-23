@@ -38,6 +38,9 @@ jobs:
       pages: none
       pull-requests: none
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./layer
     steps:
       - name: checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332  # v4.1.7
@@ -76,21 +79,21 @@ jobs:
           driver: docker
           platforms: linux/amd64,linux/arm64
 
-      #- name: Install CDK
-      #  working-directory: ./
-      #  run: |
-      #    npm ci
-      #    npx cdk --version
+      - name: Install CDK
+        working-directory: ./
+        run: |
+          npm ci
+          npx cdk --version
 
       # Baking time for PyPi eventual consistency; 60s seemed more than enough
       # https://github.com/aws-powertools/powertools-lambda-python/issues/2491
       #- name: Baking time (PyPi)
       #  run: sleep 60
 
-      #- name: CDK build
-      #  run: npx cdk synth --verbose --context version="${{ inputs.latest_published_version }}" -o cdk.out
-      #- name: zip output
-      #  run: zip -r cdk.out.zip cdk.out
+      - name: CDK build
+        run: npx cdk synth --verbose --context version="2.50" -o cdk.out
+      - name: zip output
+        run: zip -r cdk.out.zip cdk.out
       #- name: Archive CDK artifacts
       #  uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
       #  with:
