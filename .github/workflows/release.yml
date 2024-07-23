@@ -41,7 +41,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ["3.8", "3.9"]
+        python-version: ["3.10", "3.11"]
     env:
       PYTHON: "${{ matrix.python-version }}"
     defaults:
@@ -58,7 +58,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: "18.20.4"
+          node-version: "16.20"
       - name: Setup python
         uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
