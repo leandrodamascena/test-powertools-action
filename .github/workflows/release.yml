@@ -102,6 +102,7 @@ jobs:
           npx cdk synth --verbose --context version="1.0.0" --context pythonVersion="${{ matrix.python-version }}" -o cdk.out
           ARCH=$(uname -m)
           echo "ARCH=${ARCH}" >> "$GITHUB_ENV"
+          echo "Zipping files in the $ARCH base image"
           zip -r cdk.py${{ matrix.python-version }}.${ARCH}.out.zip cdk.out
         
       - name: Archive CDK artifacts aarch64
