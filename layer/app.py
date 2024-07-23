@@ -20,7 +20,7 @@ if not POWERTOOLS_VERSION:
 
 LayerStack(
     app,
-    "LayerV2Stack",
+    f"LayerV2Stack-{PYTHON_VERSION}",
     powertools_version=POWERTOOLS_VERSION,
     python_version=PYTHON_VERSION,
     ssm_parameter_layer_arn=SSM_PARAM_LAYER_ARN,

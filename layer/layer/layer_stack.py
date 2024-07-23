@@ -79,6 +79,9 @@ class LayerStack(Stack):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        layer_name_x86 = f"AWSLambdaPowertoolsPythonV2-{python_version.replace(".", "")}"
+        layer_name_arm64 = f"AWSLambdaPowertoolsPythonV2-Arm64-{python_version.replace(".", "")}"
+
         has_arm64_support = CfnParameter(
             self,
             "HasARM64Support",
@@ -104,7 +107,7 @@ class LayerStack(Stack):
         layer_single = Layer(
             self,
             "LayerSingle",
-            layer_version_name="AWSLambdaPowertoolsPythonV2",
+            layer_version_name=layer_name_x86,
             python_version=python_version,
             powertools_version=powertools_version,
         )
@@ -127,7 +130,7 @@ class LayerStack(Stack):
         layer = Layer(
             self,
             "Layer",
-            layer_version_name="AWSLambdaPowertoolsPythonV2",
+            layer_version_name=layer_name_x86,
             powertools_version=powertools_version,
             python_version=python_version,
             architecture=Architecture.X86_64,
@@ -143,6 +146,7 @@ class LayerStack(Stack):
             )
         ).add(ApplyCondition(has_arm64_condition))
 
+        # MISSING OUTPUT
         CfnOutput(
             self,
             "LatestLayerArn",
@@ -158,7 +162,7 @@ class LayerStack(Stack):
         layer_arm64 = Layer(
             self,
             "Layer-ARM64",
-            layer_version_name="AWSLambdaPowertoolsPythonV2-Arm64",
+            layer_version_name=layer_name_arm64,
             powertools_version=powertools_version,
             python_version=python_version,
             architecture=Architecture.ARM_64,
@@ -176,6 +180,7 @@ class LayerStack(Stack):
             ).to_string(),
         )
 
+        # MISSING OUTPUT
         Aspects.of(
             CfnOutput(self, "LatestLayerArm64Arn", value=layer_arm64.layer_version_arn)
         ).add(ApplyCondition(has_arm64_condition))

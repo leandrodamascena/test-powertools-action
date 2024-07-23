@@ -131,7 +131,7 @@ jobs:
       - name: unzip artefact
         run: unzip cdk.py${{ matrix.python-version }}.out.zip
       - name: CDK Deploy Layer
-        run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} 'LayerV2Stack' --require-approval never --verbose --outputs-file cdk-outputs.json
+        run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} 'LayerV2Stack-${{ matrix.python-version }}' --require-approval never --verbose --outputs-file cdk-outputs.json
       #- name: Store latest Layer ARN
       #  if: ${{ inputs.stage == 'PROD' }}
       #  run: |
