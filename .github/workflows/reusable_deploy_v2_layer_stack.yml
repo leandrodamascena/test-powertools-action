@@ -77,7 +77,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8"]
         # To get a list of current regions, use:
         # aws ec2 describe-regions --all-regions --query "Regions[].RegionName" --output text | tr "\t" "\n" | sort
         include:
@@ -85,6 +84,7 @@ jobs:
             has_arm64_support: "true"
           - region: "us-east-2"
             has_arm64_support: "true"
+        python-version: ["3.8"]
 
     steps:
       - name: checkout
@@ -130,8 +130,8 @@ jobs:
           path: layer
       - name: unzip artefact
         run: unzip cdk.py${{ matrix.python-version }}.out.zip
-      #- name: CDK Deploy Layer
-      #  run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} 'LayerV2Stack' --require-approval never --verbose --outputs-file cdk-outputs.json
+      - name: CDK Deploy Layer
+        run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} 'LayerV2Stack' --require-approval never --verbose --outputs-file cdk-outputs.json
       #- name: Store latest Layer ARN
       #  if: ${{ inputs.stage == 'PROD' }}
       #  run: |
