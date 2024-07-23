@@ -73,6 +73,7 @@ jobs:
           pip install --require-hashes -r requirements.txt
 
       - name: Set up QEMU
+        if: ${{matrix.platform}} == "linux/arm64"
         if: ${{ matrix.platform }} != 'linux/amd64'
         uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v2.0.0
         with:
@@ -97,14 +98,17 @@ jobs:
         id: cdkbuild
         run: | 
           npx cdk synth --verbose --context version="1.0.0" --context pythonVersion="${{ matrix.python-version }}" -o cdk.out
-          ARCH=$(uname -m)
-          echo "ARCH=${ARCH}" >> "$GITHUB_ENV"
-          echo "Zipping files in the $ARCH base image"
-          zip -r cdk.py${{ matrix.python-version }}.${{ matrix.platform }}.out.zip cdk.out
-        
+
+      - name: zip output
+        id: zipfiles
+        run: |
+          NAME=$(${{ matrix.platform }} | tr -d '/')
+          echo "NAME=${NAME}" >> "$GITHUB_ENV"
+          zip -r cdk.py${{ matrix.python-version }}.${NAME}.out.zip cdk.out
+          
       - name: Archive CDK artifacts
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
-          name: cdk-layer-artifact-py${{ matrix.python-version }}.${{ matrix.platform }}
-          path: layer/cdk.py${{ matrix.python-version }}.${{ matrix.platform }}.out.zip
+          name: cdk-layer-artifact-py${{ matrix.python-version }}.${{ steps.zipfiles.outputs.NAME }}
+          path: layer/cdk.py${{ matrix.python-version }}.${{ steps.zipfiles.outputs.NAME }}.out.zip
     
