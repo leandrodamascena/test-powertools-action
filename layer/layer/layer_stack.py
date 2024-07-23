@@ -37,6 +37,7 @@ class Layer(Construct):
         construct_id: str,
         layer_version_name: str,
         powertools_version: str,
+        python_version: str,
         architecture: Optional[Architecture] = None,
         **kwargs
     ) -> None:
@@ -48,6 +49,7 @@ class Layer(Construct):
             layer_version_name=layer_version_name,
             version=powertools_version,
             include_extras=True,
+            python_version=python_version,
             compatible_architectures=[architecture] if architecture else [],
         )
         layer.apply_removal_policy(RemovalPolicy.RETAIN)
@@ -70,6 +72,7 @@ class LayerStack(Stack):
         scope: Construct,
         construct_id: str,
         powertools_version: str,
+        python_version: str,
         ssm_parameter_layer_arn: str,
         ssm_parameter_layer_arm64_arn: str,
         **kwargs
@@ -125,6 +128,7 @@ class LayerStack(Stack):
             "Layer",
             layer_version_name="AWSLambdaPowertoolsPythonV2",
             powertools_version=powertools_version,
+            python_version=python_version,
             architecture=Architecture.X86_64,
         )
         Aspects.of(layer).add(ApplyCondition(has_arm64_condition))
@@ -155,6 +159,7 @@ class LayerStack(Stack):
             "Layer-ARM64",
             layer_version_name="AWSLambdaPowertoolsPythonV2-Arm64",
             powertools_version=powertools_version,
+            python_version=python_version,
             architecture=Architecture.ARM_64,
         )
         Aspects.of(layer_arm64).add(ApplyCondition(has_arm64_condition))

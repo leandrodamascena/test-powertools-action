@@ -8,6 +8,7 @@ from layer.layer_stack import LayerStack
 app = cdk.App()
 
 POWERTOOLS_VERSION: str = app.node.try_get_context("version")
+PYTHON_VERSION: str = app.node.try_get_context("pythonVersion")
 SSM_PARAM_LAYER_ARN: str = "/layers/powertools-layer-v2-arn"
 SSM_PARAM_LAYER_ARM64_ARN: str = "/layers/powertools-layer-v2-arm64-arn"
 
@@ -21,6 +22,7 @@ LayerStack(
     app,
     "LayerV2Stack",
     powertools_version=POWERTOOLS_VERSION,
+    python_version=PYTHON_VERSION,
     ssm_parameter_layer_arn=SSM_PARAM_LAYER_ARN,
     ssm_parameter_layer_arm64_arn=SSM_PARAM_LAYER_ARM64_ARN,
 )
