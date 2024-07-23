@@ -41,7 +41,7 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8"]
     env:
       PYTHON: "${{ matrix.python-version }}"
     defaults:
@@ -106,3 +106,19 @@ jobs:
           name: cdk-layer-artifact-py${{ matrix.python-version }}
           path: layer/cdk.py${{ matrix.python-version }}.out.zip
     
+
+  beta:
+    needs: build-layer
+    # lower privilege propagated from parent workflow (release.yml)
+    permissions:
+      id-token: write
+      contents: read
+    uses: ./.github/workflows/reusable_deploy_v2_layer_stack.yml
+    secrets: inherit
+    with:
+      stage: "BETA"
+      artefact-name: "cdk-layer-artefact"
+      environment: "layer-beta"
+      latest_published_version: ${{ inputs.latest_published_version }}
+      source_code_artifact_name: ${{ inputs.source_code_artifact_name }}
+      source_code_integrity_hash: ${{ inputs.source_code_integrity_hash }}
