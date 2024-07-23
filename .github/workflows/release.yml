@@ -41,8 +41,8 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        python-version: ["3.10"]
-        platform: [linux/amd64]
+        python-version: ["3.10", "3.11"]
+        platform: ["linux/amd64", "linux/arm64"]
     env:
       PYTHON: "${{ matrix.python-version }}"
     defaults:
@@ -102,7 +102,7 @@ jobs:
         id: zipfiles
         run: |
           NAME=$(${{ matrix.platform }} | tr -d '/')
-          echo "NAME=${NAME}" >> "$GITHUB_ENV"
+          echo "NAME=${NAME}" >> "$GITHUB_OUTPUT"
           zip -r cdk.py${{ matrix.python-version }}.${NAME}.out.zip cdk.out
           
       - name: Archive CDK artifacts
