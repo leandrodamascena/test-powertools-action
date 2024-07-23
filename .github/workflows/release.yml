@@ -99,7 +99,7 @@ jobs:
       - name: CDK build
         run: npx cdk synth --verbose --context version="2.40" -o cdk.out
       - name: zip output
-        run: zip -r cdk.out.zip cdk.out
+        run: zip -r cdk.py${{ matrix.python-version }}.out.zip cdk.out
       - name: Archive CDK artifacts
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
