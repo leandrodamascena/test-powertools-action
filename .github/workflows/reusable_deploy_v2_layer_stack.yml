@@ -83,6 +83,8 @@ jobs:
         include:
           - region: "us-east-1"
             has_arm64_support: "true"
+          - region: "us-east-2"
+            has_arm64_support: "true"
 
     steps:
       - name: checkout
@@ -92,11 +94,12 @@ jobs:
 
       - name: Install poetry
         run: pipx install git+https://github.com/python-poetry/poetry@68b88e5390720a3dd84f02940ec5200bfce39ac6 # v1.5.0
-      #- name: aws credentials
-      #  uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 # v2.2.0
-      #  with:
-      #    aws-region: ${{ matrix.region }}
-      #    role-to-assume: ${{ secrets.AWS_LAYERS_ROLE_ARN }}
+      - name: aws credentials
+        uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 # v2.2.0
+        with:
+          aws-region: ${{ matrix.region }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Setup Node.js
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
@@ -125,7 +128,7 @@ jobs:
           name: cdk-layer-artifact-py${{ matrix.python-version }}
           path: layer
       - name: unzip artefact
-        run: unzip cdk.out.zip
+        run: unzip cdk.py${{ matrix.python-version }}.out.zip
       #- name: CDK Deploy Layer
       #  run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} 'LayerV2Stack' --require-approval never --verbose --outputs-file cdk-outputs.json
       #- name: Store latest Layer ARN
