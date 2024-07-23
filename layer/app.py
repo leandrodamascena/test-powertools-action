@@ -18,9 +18,11 @@ if not POWERTOOLS_VERSION:
         "synth step."
     )
 
+p86 = PYTHON_VERSION.replace(".", "")
+
 LayerStack(
     app,
-    f"LayerV2Stack-{PYTHON_VERSION}",
+    f"LayerV2Stack-{p86}",
     powertools_version=POWERTOOLS_VERSION,
     python_version=PYTHON_VERSION,
     ssm_parameter_layer_arn=SSM_PARAM_LAYER_ARN,
