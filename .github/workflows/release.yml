@@ -101,12 +101,18 @@ jobs:
         run: | 
           npx cdk synth --verbose --context version="1.0.0" --context pythonVersion="${{ matrix.python-version }}" -o cdk.out
           ARCH=$(uname -m)
-          echo "ARCH=${ARCH}" >> "$GITHUB_OUTPUT"
+          echo "ARCH=${ARCH}" >> "$GITHUB_ENV"
+          zip -r cdk.py${{ matrix.python-version }}.${ARCH}.out.zip cdk.out
         
-      - name: zip output
-        run: zip -r cdk.py${{ matrix.python-version }}.${{steps.cdkbuild.outputs.ARCH}}.out.zip cdk.out
-      - name: Archive CDK artifacts
+      - name: Archive CDK artifacts aarch64
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
-          name: cdk-layer-artifact-py${{ matrix.python-version }}.${{steps.cdkbuild.outputs.ARCH}}
-          path: layer/cdk.py${{ matrix.python-version }}.${{steps.cdkbuild.outputs.ARCH}}.out.zip
+          name: cdk-layer-artifact-py${{ matrix.python-version }}.aarch64
+          path: layer/cdk.py${{ matrix.python-version }}.aarch64.out.zip
+      
+      - name: Archive CDK artifacts x86_64
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: cdk-layer-artifact-py${{ matrix.python-version }}.x86_64
+          path: layer/cdk.py${{ matrix.python-version }}.x86_64.out.zip
+    
