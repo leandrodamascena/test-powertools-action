@@ -89,17 +89,17 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "boto3"
-version = "1.34.146"
+version = "1.34.147"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "boto3-1.34.146-py3-none-any.whl", hash = "sha256:7ec568fb19bce82a70be51f08fddac1ef927ca3fb0896cbb34303a012ba228d8"},
-    {file = "boto3-1.34.146.tar.gz", hash = "sha256:5686fe2a6d1aa1de8a88e9589cdcc33361640d3d7a13da718a30717248886124"},
+    {file = "boto3-1.34.147-py3-none-any.whl", hash = "sha256:e1cef9a1a301866bcdee32ae0c699465eb2345f9a8e613a5835821430165ff6d"},
+    {file = "boto3-1.34.147.tar.gz", hash = "sha256:9ec1c6ab22588242a47549f51a63dfc7c21fdf95a94820fc6e629ab060c38bd9"},
 ]
 
 [package.dependencies]
-botocore = ">=1.34.146,<1.35.0"
+botocore = ">=1.34.147,<1.35.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.10.0,<0.11.0"
 
@@ -108,13 +108,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.34.146"
+version = "1.34.147"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.34.146-py3-none-any.whl", hash = "sha256:3fd4782362bd29c192704ebf859c5c8c5189ad05719e391eefe23088434427ae"},
-    {file = "botocore-1.34.146.tar.gz", hash = "sha256:849cb8e54e042443aeabcd7822b5f2b76cb5cfe33fe3a71f91c7c069748a869c"},
+    {file = "botocore-1.34.147-py3-none-any.whl", hash = "sha256:be94a2f4874b1d1705cae2bd512c475047497379651678593acb6c61c50d91de"},
+    {file = "botocore-1.34.147.tar.gz", hash = "sha256:2e8f000b77e4ca345146cb2edab6403769a517b564f627bb084ab335417f3dbe"},
 ]
 
 [package.dependencies]
@@ -255,14 +255,14 @@ typeguard = ">=2.13.3,<2.14.0"
 typing-extensions = ">=3.8,<5.0"
 
 [[package]]
-name = "leo-cdk-aws-lambda-powertools-layer"
+name = "leox-cdk-aws-lambda-powertools-layer"
 version = "0.0.0"
 description = "Powertools for AWS Lambda layer for python and typescript"
 optional = false
 python-versions = "~=3.8"
 files = [
-    {file = "leo-cdk-aws-lambda-powertools-layer-0.0.0.tar.gz", hash = "sha256:e1b8e970af44e7c7e092ae3b2844ff08d5d7b7ef39c699ff05bbeba3ebe24618"},
-    {file = "leo_cdk_aws_lambda_powertools_layer-0.0.0-py3-none-any.whl", hash = "sha256:4f2a5d0fecb4da86e0d89823393925ad09e0b4490c0ae02f0d7ac4103a2bf64d"},
+    {file = "leox-cdk-aws-lambda-powertools-layer-0.0.0.tar.gz", hash = "sha256:dabfeb7b2cf91c7141be17dbb2ce7b5f8466caa76ca6fa49f7b627f85428e2f4"},
+    {file = "leox_cdk_aws_lambda_powertools_layer-0.0.0-py3-none-any.whl", hash = "sha256:a2a35e3d0d49263f50f502aa6d10d42d33248cc61c248aca9ef680bad02f6d85"},
 ]
 
 [package.dependencies]
@@ -461,4 +461,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "5ac113f98f5e980de568c788bd656c389c0e9c02444c8ce5e3b80c272c75ec71"
+content-hash = "661a42f46a992da1d376a876b37b26a444f21ba71368369ac77e3a3e3bd40f71"

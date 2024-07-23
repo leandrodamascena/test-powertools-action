@@ -7,7 +7,7 @@ authors = ["DevAx <aws-devax-open-source@amazon.com>"]
 license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.8"
-leo-cdk-aws-lambda-powertools-layer = "^0.0.0"
+leox-cdk-aws-lambda-powertools-layer = "^0.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
