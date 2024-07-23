@@ -105,6 +105,7 @@ class LayerStack(Stack):
             self,
             "LayerSingle",
             layer_version_name="AWSLambdaPowertoolsPythonV2",
+            python_version=python_version,
             powertools_version=powertools_version,
         )
         Aspects.of(layer_single).add(ApplyCondition(has_no_arm64_condition))
