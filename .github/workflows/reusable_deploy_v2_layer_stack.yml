@@ -84,7 +84,7 @@ jobs:
             has_arm64_support: "true"
           - region: "us-east-2"
             has_arm64_support: "true"
-        python-version: ["3.8","3.9"]
+        python-version: ["3.8","3.9","3.10","3.11","3.12"]
 
     steps:
       - name: checkout
