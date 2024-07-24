@@ -107,7 +107,7 @@ class LayerStack(Stack):
 
         layer_single = Layer(
             self,
-            "LayerSingle",
+            f"LayerSingle-{p86}",
             layer_version_name=layer_name_x86,
             python_version=python_version,
             powertools_version=powertools_version,
@@ -117,7 +117,7 @@ class LayerStack(Stack):
         Aspects.of(
             StringParameter(
                 self,
-                "SingleVersionArn",
+                f"SingleVersionArn-{p86}",
                 parameter_name=ssm_parameter_layer_arn,
                 string_value=layer_single.layer_version_arn,
             )
@@ -130,7 +130,7 @@ class LayerStack(Stack):
 
         layer = Layer(
             self,
-            "Layer",
+            f"Layer-{p86}",
             layer_version_name=layer_name_x86,
             powertools_version=powertools_version,
             python_version=python_version,
@@ -141,7 +141,7 @@ class LayerStack(Stack):
         Aspects.of(
             StringParameter(
                 self,
-                "VersionArn",
+                f"VersionArn-{p86}",
                 parameter_name=ssm_parameter_layer_arn,
                 string_value=layer.layer_version_arn,
             )
@@ -162,7 +162,7 @@ class LayerStack(Stack):
 
         layer_arm64 = Layer(
             self,
-            "Layer-ARM64",
+            f"Layer-ARM64-{p86}",
             layer_version_name=layer_name_arm64,
             powertools_version=powertools_version,
             python_version=python_version,
@@ -172,7 +172,7 @@ class LayerStack(Stack):
 
         StringParameter(
             self,
-            "Arm64VersionArn",
+            f"Arm64VersionArn-{p86}",
             parameter_name=ssm_parameter_layer_arm64_arn,
             string_value=Fn.condition_if(
                 has_arm64_condition.logical_id,
