@@ -152,7 +152,7 @@ jobs:
         if: ${{ inputs.stage == 'BETA' }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
-          name: cdk-layer-stack-${{ matrix.region }}
+          name: cdk-layer-stack-${{ matrix.region }}-${{ matrix.python-version }}
           path: ./layer/cdk-layer-stack/* # NOTE: upload-artifact does not inherit working-directory setting.
           if-no-files-found: error
           retention-days: 1
