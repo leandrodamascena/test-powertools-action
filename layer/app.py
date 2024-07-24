@@ -9,8 +9,9 @@ app = cdk.App()
 
 POWERTOOLS_VERSION: str = app.node.try_get_context("version")
 PYTHON_VERSION: str = app.node.try_get_context("pythonVersion")
-SSM_PARAM_LAYER_ARN: str = "/layers/powertools-layer-v2-arn"
-SSM_PARAM_LAYER_ARM64_ARN: str = "/layers/powertools-layer-v2-arm64-arn"
+p86 = PYTHON_VERSION.replace(".", "")
+SSM_PARAM_LAYER_ARN: str = f"/layers/powertools-layer-v2-arn-{p86}"
+SSM_PARAM_LAYER_ARM64_ARN: str = f"/layers/powertools-layer-v2-arm64-arn-{p86}"
 
 if not POWERTOOLS_VERSION:
     raise ValueError(
@@ -18,7 +19,6 @@ if not POWERTOOLS_VERSION:
         "synth step."
     )
 
-p86 = PYTHON_VERSION.replace(".", "")
 
 LayerStack(
     app,
