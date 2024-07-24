@@ -31,8 +31,9 @@ LayerStack(
 
 CanaryStack(
     app,
-    "CanaryV2Stack",
+    f"CanaryV2Stack-{p86}",
     powertools_version=POWERTOOLS_VERSION,
+    python_version=PYTHON_VERSION,
     ssm_paramter_layer_arn=SSM_PARAM_LAYER_ARN,
     ssm_parameter_layer_arm64_arn=SSM_PARAM_LAYER_ARM64_ARN,
 )
