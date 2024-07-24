@@ -11,10 +11,16 @@ from leo_aws_lambda_powertools import Logger, Metrics, Tracer
 from leo_aws_lambda_powertools.utilities.parser import BaseModel, envelopes, event_parser
 from leo_aws_lambda_powertools.utilities.typing import LambdaContext
 from leo_aws_lambda_powertools.utilities.validation import validator
+from leo_aws_lambda_powertools.utilities.data_masking import DataMasking
+from leo_aws_lambda_powertools.event_handler import APIGatewayRestResolver
+
+
 
 logger = Logger(service="version-track")
 tracer = Tracer()  # this checks for aws-xray-sdk presence
 metrics = Metrics(namespace="powertools-layer-canary", service="PowertoolsLayerCanary")
+data_masker = DataMasking()
+app = APIGatewayRestResolver()
 
 layer_arn = os.getenv("POWERTOOLS_LAYER_ARN")
 powertools_version = os.getenv("POWERTOOLS_VERSION")

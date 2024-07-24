@@ -72,7 +72,6 @@ jobs:
           pip install --require-hashes -r requirements.txt
 
       - name: Set up QEMU
-        if: "${{matrix.platform}} == 'linux/arm64'"
         uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v2.0.0
         with:
           platforms: arm64
@@ -95,7 +94,7 @@ jobs:
       - name: CDK build
         id: cdkbuild
         run: | 
-          npx cdk synth --verbose --context version="1.0.0" --context pythonVersion="${{ matrix.python-version }}" -o cdk.out
+          npx cdk synth --verbose --context version="1.0.1" --context pythonVersion="${{ matrix.python-version }}" -o cdk.out
 
       - name: zip output
         run: zip -r cdk.py${{ matrix.python-version }}.out.zip cdk.out
