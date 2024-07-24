@@ -28,4 +28,4 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
       - name: After setup
-        run: echo "OI"
+        run: echo ${{ matrix.python-version }} - ${{ matrix.region }}
