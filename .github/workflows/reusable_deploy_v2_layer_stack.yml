@@ -130,27 +130,29 @@ jobs:
           path: layer
       - name: unzip artefact
         run: unzip cdk.py${{ matrix.python-version }}.out.zip
-      - name: Get Python Version
-        id: pythonversion
+      - name: Define constants
+        id: constants
         run: |
-          VERSION=$(echo ${{ matrix.python-version }} | tr -d '.')
-          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          PYTHON_VERSION=$(echo ${{ matrix.python-version }} | tr -d '.')
+          LAYER_VERSION=$(echo ${{ matrix.region }}-$PYTHON_VERSION-layer-version.txt)
+          echo "PYTHON_VERSION=${PYTHON_VERSION}" >> $GITHUB_OUTPUT
+          echo "LAYER_VERSION=${LAYER_VERSION}" >> $GITHUB_OUTPUT
       - name: CDK Deploy Layer
-        run:  npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} "LayerV2Stack-${{steps.pythonversion.outputs.VERSION}}" --require-approval never --verbose --outputs-file cdk-outputs.json
-      #- name: Store latest Layer ARN
-      #  if: ${{ inputs.stage == 'PROD' }}
-      #  run: |
-      #    mkdir cdk-layer-stack
-      #    jq -r -c '.LayerV2Stack.LatestLayerArn' cdk-outputs.json > cdk-layer-stack/${{ matrix.region }}-layer-version.txt
-      #    jq -r -c '.LayerV2Stack.LatestLayerArm64Arn' cdk-outputs.json >> cdk-layer-stack/${{ matrix.region }}-layer-version.txt
-      #    cat cdk-layer-stack/${{ matrix.region }}-layer-version.txt
-      #- name: Save Layer ARN artifact
-      #  if: ${{ inputs.stage == 'PROD' }}
-      #  uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
-      #  with:
-      #    name: cdk-layer-stack-${{ matrix.region }}
-      #    path: ./layer/cdk-layer-stack/* # NOTE: upload-artifact does not inherit working-directory setting.
-      #    if-no-files-found: error
-      #    retention-days: 1
+        run:  npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} "LayerV2Stack-${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose --outputs-file cdk-outputs.json
+      - name: Store latest Layer ARN
+        if: ${{ inputs.stage == 'BETA' }}
+        run: |
+          mkdir cdk-layer-stack
+          jq -r -c '.LayerV2Stack-${{steps.constants.outputs.PYTHON_VERSION}}.LatestLayerArn' cdk-outputs.json > cdk-layer-stack/${{steps.constants.outputs.LAYER_VERSION}}
+          jq -r -c '.LayerV2Stack-${{steps.constants.outputs.PYTHON_VERSION}}.LatestLayerArm64Arn' cdk-outputs.json >> cdk-layer-stack/${{steps.constants.outputs.LAYER_VERSION}}
+          cat cdk-layer-stack/${{steps.constants.outputs.LAYER_VERSION}}
+      - name: Save Layer ARN artifact
+        if: ${{ inputs.stage == 'BETA' }}
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: cdk-layer-stack-${{ matrix.region }}
+          path: ./layer/cdk-layer-stack/* # NOTE: upload-artifact does not inherit working-directory setting.
+          if-no-files-found: error
+          retention-days: 1
       - name: CDK Deploy Canary
         run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters DeployStage="${{ inputs.stage }}" --parameters HasARM64Support=${{ matrix.has_arm64_support }} "CanaryV2Stack-${{steps.pythonversion.outputs.VERSION}}" --require-approval never --verbose
