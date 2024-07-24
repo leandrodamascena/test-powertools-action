@@ -46,6 +46,7 @@ class CanaryStack(Stack):
         scope: Construct,
         construct_id: str,
         powertools_version: str,
+        python_version: str,
         ssm_paramter_layer_arn: str,
         ssm_parameter_layer_arm64_arn: str,
         **kwargs,
@@ -106,10 +107,13 @@ class Canary(Construct):
         construct_id: str,
         layer_arn: str,
         powertools_version: str,
+        python_version: str,
         architecture: Architecture,
         stage: str,
     ):
         super().__init__(scope, construct_id)
+
+        p86 = python_version.replace(".", "")
 
         layer = LayerVersion.from_layer_version_arn(
             self, "PowertoolsLayer", layer_version_arn=layer_arn
@@ -133,15 +137,28 @@ class Canary(Construct):
             )
         )
 
+        if python_version == "3.8":
+            runtime = Runtime.PYTHON_3_8
+        elif python_version == "3.9":
+            runtime = Runtime.PYTHON_3_9
+        elif python_version == "3.10":
+            runtime = Runtime.PYTHON_3_10
+        elif python_version == "3.11":
+            runtime = Runtime.PYTHON_3_11
+        elif python_version == "3.12":
+            runtime = Runtime.PYTHON_3_12
+        else: 
+            raise ValueError("Unsupported Python version")
+
         canary_lambda = Function(
             self,
-            "CanaryLambdaFunction",
+            f"CanaryLambdaFunction-{p86}",
             code=Code.from_asset("layer/canary"),
             handler="app.on_event",
             layers=[layer],
             memory_size=512,
             timeout=Duration.seconds(10),
-            runtime=Runtime.PYTHON_3_9,
+            runtime=runtime,
             architecture=architecture,
             log_retention=RetentionDays.TEN_YEARS,
             role=execution_role,
@@ -164,7 +181,7 @@ class Canary(Construct):
         # custom resource provider configuration
         provider = Provider(
             self,
-            "CanaryCustomResource",
+            f"CanaryCustomResource-{p86}",
             on_event_handler=canary_lambda,
             log_retention=RetentionDays.TEN_YEARS,
         )

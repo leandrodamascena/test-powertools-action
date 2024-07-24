@@ -7,10 +7,10 @@ from importlib.metadata import version
 import boto3
 from pydantic import HttpUrl
 
-from aws_lambda_powertools import Logger, Metrics, Tracer
-from aws_lambda_powertools.utilities.parser import BaseModel, envelopes, event_parser
-from aws_lambda_powertools.utilities.typing import LambdaContext
-from aws_lambda_powertools.utilities.validation import validator
+from leo_aws_lambda_powertools import Logger, Metrics, Tracer
+from leo_aws_lambda_powertools.utilities.parser import BaseModel, envelopes, event_parser
+from leo_aws_lambda_powertools.utilities.typing import LambdaContext
+from leo_aws_lambda_powertools.utilities.validation import validator
 
 logger = Logger(service="version-track")
 tracer = Tracer()  # this checks for aws-xray-sdk presence
