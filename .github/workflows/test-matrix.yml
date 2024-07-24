@@ -1,0 +1,32 @@
+name: Matrix test
+
+on:
+    workflow_dispatch:
+        inputs:
+            version_to_publish:
+                description: "Version to be released in PyPi, Docs, and Lambda Layer, e.g. v2.0.0, v2.0.0a0 (pre-release)"
+                default: v2.0.0
+                required: true
+
+jobs:
+  test-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - region: "us-east-1"
+          has_arm64_support: "true"
+          python-version: ["3.8","3.9","3.10","3.11","3.12"]
+        - region: "us-east-2"
+          has_arm64_support: "true"
+          python-version: ["3.8","3.9","3.10","3.11","3.12"]
+    
+    steps:
+      - name: Setup python
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+      - name: After setup
+        run: echo "OI"
