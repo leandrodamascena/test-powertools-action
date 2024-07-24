@@ -79,6 +79,7 @@ class CanaryStack(Stack):
             "Canary-x86-64",
             layer_arn=layer_arn,
             powertools_version=powertools_version,
+            python_version=python_version,
             architecture=Architecture.X86_64,
             stage=deploy_stage,
         )
@@ -94,6 +95,7 @@ class CanaryStack(Stack):
             "Canary-arm64",
             layer_arn=layer_arm64_arn,
             powertools_version=powertools_version,
+            python_version=python_version,
             architecture=Architecture.ARM_64,
             stage=deploy_stage,
         )
