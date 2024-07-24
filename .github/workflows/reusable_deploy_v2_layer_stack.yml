@@ -84,7 +84,7 @@ jobs:
             has_arm64_support: "true"
           - region: "us-east-2"
             has_arm64_support: "true"
-        python-version: ["3.8","3.9","3.10","3.11","3.12"]
+        python-version: ["3.8"]
 
     steps:
       - name: checkout
@@ -138,7 +138,9 @@ jobs:
           echo "PYTHON_VERSION=${PYTHON_VERSION}" >> $GITHUB_OUTPUT
           echo "LAYER_VERSION=${LAYER_VERSION}" >> $GITHUB_OUTPUT
       - name: CDK Deploy Layer
-        run:  npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} "LayerV2Stack-${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose --outputs-file cdk-outputs.json
+        run:  |
+          npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} "LayerV2Stack-${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose --outputs-file cdk-outputs.json
+          cat cdk-outputs.json
       - name: Store latest Layer ARN
         if: ${{ inputs.stage == 'BETA' }}
         run: |
