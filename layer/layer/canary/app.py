@@ -86,7 +86,7 @@ def verify_powertools_version() -> None:
     :raise ValueError if the expected version is not the same as the version we get from the layer
     """
     logger.info("Checking Powertools for AWS Lambda (Python) version in library...")
-    current_version = version("aws_lambda_powertools")
+    current_version = version("leo_aws_lambda_powertools")
     if powertools_version != current_version:
         raise ValueError(
             f'Expected Powertools for AWS Lambda (Python) version is "{powertools_version}", but layer contains version "{current_version}"'
