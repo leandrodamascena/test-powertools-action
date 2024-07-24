@@ -14,12 +14,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        region: ["us-east-1","us-east-2"]
+        region: ["us-east-1","us-east-2","us-east-3"]
         python-version: ["3.8","3.9","3.10","3.11","3.12"]
         include:
             - region: "us-east-1"
               has_arm64_support: "true"
             - region: "us-east-2"
+              has_arm64_support: "false"
+            - region: "us-east-3"
               has_arm64_support: "true"
     
     steps:
@@ -33,4 +35,4 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
       - name: After setup
-        run: echo ${{ matrix.python-version }} - ${{ matrix.region }}
+        run: echo ${{ matrix.python-version }} - ${{ matrix.region }} - ${{ matrix.has_arm64_support }}
