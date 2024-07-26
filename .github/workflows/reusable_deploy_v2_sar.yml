@@ -160,6 +160,7 @@ jobs:
           # Debug purposes
           cat template.yml
           sam package --template-file template.yml --output-template-file packaged.yml --s3-bucket ${{ secrets.AWS_SAR_S3_BUCKET }}
+          cat packaged.yml
           sam publish --template packaged.yml --region "$AWS_REGION"
       - name: Deploy BETA canary
         if: ${{ inputs.stage == 'BETA' }}
