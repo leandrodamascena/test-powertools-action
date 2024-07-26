@@ -4,7 +4,7 @@ Metadata:
   AWS::ServerlessRepo::Application:
     Name: <SAR_APP_NAME>
     Description: "AWS Lambda Layer for aws-lambda-powertools"
-    Author: AWS
+    Author: Leandro Damascena
     SpdxLicenseId: Apache-2.0
     LicenseUrl: <LAYER_CONTENT_PATH>/LICENSE
     ReadmeUrl: <LAYER_CONTENT_PATH>/README.md
