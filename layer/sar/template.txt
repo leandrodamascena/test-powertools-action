@@ -23,7 +23,8 @@ Resources:
       Description: "AWS Lambda Layer for Powertools for AWS Lambda V3 - version <VERSION>"
       LayerName: <SAR_APP_NAME>
       ContentUri: <LAYER_CONTENT_PATH>
-      Architecture: <ARCHITECTURE>
+      Architecture: 
+        - <ARCHITECTURE>
       CompatibleRuntimes:
         - <PYTHON_RUNTIME>
       LicenseInfo: 'Available under the Apache-2.0 license.'

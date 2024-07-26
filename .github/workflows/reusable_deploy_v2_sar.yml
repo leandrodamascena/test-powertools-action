@@ -154,11 +154,11 @@ jobs:
           # SAR needs a README and a LICENSE, so just copy the ones from the repo
           cp README.md LICENSE "./cdk.out/$asset/"
 
-          # Debug purposes
-          cat template.yml
       - name: Deploy SAR
         run: |
           # Package the SAR to our SAR S3 bucket, and publish it
+          # Debug purposes
+          cat template.yml
           sam package --template-file template.yml --output-template-file packaged.yml --s3-bucket ${{ secrets.AWS_SAR_S3_BUCKET }}
           sam publish --template packaged.yml --region "$AWS_REGION"
       - name: Deploy BETA canary
