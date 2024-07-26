@@ -20,15 +20,12 @@ Resources:
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      Description: "AWS Lambda Layer for aws-lambda-powertools version <VERSION>"
+      Description: "AWS Lambda Layer for Powertools for AWS Lambda V3 - version <VERSION>"
       LayerName: <SAR_APP_NAME>
       ContentUri: <LAYER_CONTENT_PATH>
+      Architecture: <ARCHITECTURE>
       CompatibleRuntimes:
-        - python3.12
-        - python3.11
-        - python3.10
-        - python3.9
-        - python3.8
+        - <PYTHON_RUNTIME>
       LicenseInfo: 'Available under the Apache-2.0 license.'
       RetentionPolicy: Retain
 

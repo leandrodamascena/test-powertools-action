@@ -41,7 +41,7 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        python-version: ["3.8","3.9","3.10","3.11","3.12"]
+        python-version: ["3.8","3.9"]
     env:
       PYTHON: "${{ matrix.python-version }}"
     defaults:
@@ -119,5 +119,23 @@ jobs:
       artefact-name: "cdk-layer-artefact"
       environment: "layer-beta"
       latest_published_version: ${{ inputs.latest_published_version }}
+      source_code_artifact_name: ${{ inputs.source_code_artifact_name }}
+      source_code_integrity_hash: ${{ inputs.source_code_integrity_hash }}
+
+  sar-beta:
+    needs: beta  # canaries run on Layer Beta env
+    permissions:
+      # lower privilege propagated from parent workflow (release.yml)
+      id-token: write
+      contents: read
+      pull-requests: none
+      pages: none
+    uses: ./.github/workflows/reusable_deploy_v2_sar.yml
+    secrets: inherit
+    with:
+      stage: "BETA"
+      artefact-name: "cdk-layer-artefact"
+      environment: "layer-beta"
+      package-version: ${{ inputs.latest_published_version }}
       source_code_artifact_name: ${{ inputs.source_code_artifact_name }}
       source_code_integrity_hash: ${{ inputs.source_code_integrity_hash }}
