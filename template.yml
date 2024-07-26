@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: test-leo-aws-lambda-powertools-python-layer-arm64
+    Description: "AWS Lambda Layer for aws-lambda-powertools"
+    Author: AWS
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: ./cdk.out//LICENSE
+    ReadmeUrl: ./cdk.out//README.md
+    Labels: ['layer','lambda','powertools','python', 'aws']
+    HomePageUrl: https://github.com/aws-powertools/powertools-lambda-python
+    SemanticVersion: 1.20.10
+    SourceCodeUrl: https://github.com/aws-powertools/powertools-lambda-python
+
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Lambda Layer for aws-lambda-powertools with python 3.12, 3.11, 3.10, 3.9 or 3.8
+
+Resources:
+  LambdaLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: "AWS Lambda Layer for Powertools for AWS Lambda V3 - version 1.20.10"
+      LayerName: test-leo-aws-lambda-powertools-python-layer-arm64
+      ContentUri: ./cdk.out/
+      Architecture: arm64
+      CompatibleRuntimes:
+        - 3.9
+      LicenseInfo: 'Available under the Apache-2.0 license.'
+      RetentionPolicy: Retain
+
+Outputs:
+  LayerVersionArn:
+    Description: ARN for the published Layer version
+    Value: !Ref LambdaLayer
+    Export:
+      Name: !Sub 'LayerVersionArn-${AWS::StackName}'
