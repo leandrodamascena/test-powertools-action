@@ -138,6 +138,10 @@ jobs:
           PYTHON_VERSION=$(echo ${{ matrix.python-version }} | tr -d '.')
           asset=$(jq -jc '.Resources[] | select(.Properties.CompatibleArchitectures == ["${{ matrix.architecture }}"]) | .Metadata."aws:asset:path"' cdk.out/LayerV2Stack-${PYTHON_VERSION}.template.json)
 
+          echo $VERSION
+          echo $asset
+          cat cdk.out/LayerV2Stack-${PYTHON_VERSION}.template.json
+          
           # fill in the SAR SAM template
           sed \
             -e "s|<VERSION>|${VERSION}|g" \
