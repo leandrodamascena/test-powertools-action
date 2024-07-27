@@ -113,11 +113,17 @@ jobs:
           name: cdk-layer-artifact-py${{ matrix.python-version }}
       - name: Unzip artefact
         run: unzip cdk.py${{ matrix.python-version }}.out.zip
+      - name: normalize Python Version
+        run: |
+          PYTHON_VERSION=$(echo ${{ matrix.python-version }} | tr -d '.')
+          echo "PYTHON_VERSION=${PYTHON_VERSION}" >> "$GITHUB_ENV"
       - name: Configure SAR name
         run: |
           if [[ "${{ inputs.stage }}" == "BETA" ]]; then
             SAR_NAME="test-${SAR_NAME}"
           fi
+
+          SAR_NAME="${SAR_NAME}-python${{env.PYTHON_VERSION}}"
           echo SAR_NAME="${SAR_NAME}" >> "$GITHUB_ENV"
       - name: Adds arm64 suffix to SAR name
         if: ${{ matrix.architecture == 'arm64' }}
