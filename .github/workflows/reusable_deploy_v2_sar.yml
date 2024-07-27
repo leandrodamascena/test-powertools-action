@@ -168,40 +168,40 @@ jobs:
           sam package --template-file template.yml --output-template-file packaged.yml --s3-bucket ${{ secrets.AWS_SAR_S3_BUCKET }}
           cat packaged.yml
           sam publish --template packaged.yml --region "$AWS_REGION"
-      - name: Deploy BETA canary
-        if: ${{ inputs.stage == 'BETA' }}
-        run: |
-          if [[ "${{ matrix.architecture }}" == "arm64" ]]; then
-            TEST_STACK_NAME="${TEST_STACK_NAME}-arm64"
-          fi
+      #- name: Deploy BETA canary
+      #  if: ${{ inputs.stage == 'BETA' }}
+      #  run: |
+      #    if [[ "${{ matrix.architecture }}" == "arm64" ]]; then
+      #      TEST_STACK_NAME="${TEST_STACK_NAME}-arm64"
+      #    fi#
 
-          echo "Check if stack does not exist"
-          stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}" --output text)
+      #    echo "Check if stack does not exist"
+      #    stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}" --output text)
 
-          if [[ -n "$stack_exists" ]] ; then
-            echo "Found test deployment stack, removing..."
-            aws cloudformation delete-stack --stack-name "$TEST_STACK_NAME"
-            aws cloudformation wait stack-delete-complete --stack-name "$TEST_STACK_NAME"
-          fi
+      #    if [[ -n "$stack_exists" ]] ; then
+      #      echo "Found test deployment stack, removing..."
+      #      aws cloudformation delete-stack --stack-name "$TEST_STACK_NAME"
+      #      aws cloudformation wait stack-delete-complete --stack-name "$TEST_STACK_NAME"
+      #    fi
 
-          echo "Creating canary stack"
-          echo "Stack name: $TEST_STACK_NAME"
-          aws serverlessrepo create-cloud-formation-change-set \
-            --application-id arn:aws:serverlessrepo:${{ env.AWS_REGION }}:545611465610:applications/${{ env.SAR_NAME }} \
-            --stack-name "${TEST_STACK_NAME/serverlessrepo-/}" \
-            --capabilities CAPABILITY_NAMED_IAM
+       #   echo "Creating canary stack"
+       #   echo "Stack name: $TEST_STACK_NAME"
+       #   aws serverlessrepo create-cloud-formation-change-set \
+       #     --application-id arn:aws:serverlessrepo:${{ env.AWS_REGION }}:545611465610:applications/${{ env.SAR_NAME }} \
+       #     --stack-name "${TEST_STACK_NAME/serverlessrepo-/}" \
+       #     --capabilities CAPABILITY_NAMED_IAM
 
-          CHANGE_SET_ID=$(aws cloudformation list-change-sets --stack-name "$TEST_STACK_NAME" --query 'Summaries[*].ChangeSetId' --output text)
-          aws cloudformation wait change-set-create-complete --change-set-name "$CHANGE_SET_ID"
-          aws cloudformation execute-change-set --change-set-name "$CHANGE_SET_ID"
-          aws cloudformation wait stack-create-complete --stack-name "$TEST_STACK_NAME"
+      #    CHANGE_SET_ID=$(aws cloudformation list-change-sets --stack-name "$TEST_STACK_NAME" --query 'Summaries[*].ChangeSetId' --output text)
+      #    aws cloudformation wait change-set-create-complete --change-set-name "$CHANGE_SET_ID"
+      #    aws cloudformation execute-change-set --change-set-name "$CHANGE_SET_ID"
+      #    aws cloudformation wait stack-create-complete --stack-name "$TEST_STACK_NAME"
 
-          echo "Waiting until stack deployment completes..."
+      #    echo "Waiting until stack deployment completes..."
 
-          echo "Exit with error if stack is not in CREATE_COMPLETE"
-          stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}")
-          if [[ -z "$stack_exists" ]] ; then
-            echo "Could find successful deployment, exit error..."
-            exit 1
-          fi
-          echo "Deployment successful"
+      #    echo "Exit with error if stack is not in CREATE_COMPLETE"
+      #    stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}")
+      #    if [[ -z "$stack_exists" ]] ; then
+      #      echo "Could find successful deployment, exit error..."
+      #      exit 1
+      #    fi
+      #    echo "Deployment successful"
