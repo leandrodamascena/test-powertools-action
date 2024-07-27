@@ -38,8 +38,8 @@ permissions:
 env:
   NODE_VERSION: 18.20.4
   AWS_REGION: us-east-1
-  SAR_NAME: leo-aws-lambda-powertools-python-layer
-  TEST_STACK_NAME: leo-serverlessrepo-v3-powertools-layer-test-stack
+  SAR_NAME: aws-lambda-powertools-python-layer
+  TEST_STACK_NAME: serverlessrepo-v3-powertools-layer-test-stack
   RELEASE_COMMIT: ${{ github.sha }}  # it gets propagated from the caller for security reasons
 
 on:
