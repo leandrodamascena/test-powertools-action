@@ -77,7 +77,7 @@ jobs:
     strategy:
       matrix:
         architecture: ["x86_64", "arm64"]
-        python-version: ["3.8","3.9","3.10","3.11","3.12"]
+        python-version: ["3.8"]
     steps:
       - name: checkout
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
@@ -166,28 +166,27 @@ jobs:
           sam package --template-file template.yml --output-template-file packaged.yml --s3-bucket ${{ secrets.AWS_SAR_S3_BUCKET }}
           cat packaged.yml
           sam publish --template packaged.yml --region "$AWS_REGION"
-      #- name: Deploy BETA canary
-      #  if: ${{ inputs.stage == 'BETA' }}
-      #  run: |
-      #    if [[ "${{ matrix.architecture }}" == "arm64" ]]; then
-      #      TEST_STACK_NAME="${TEST_STACK_NAME}-arm64"
-      #    fi#
+      - name: Deploy BETA canary
+        if: ${{ inputs.stage == 'BETA' }}
+        run: |
+          ARCH_NAME=$(echo ${{ matrix.architecture }} | tr -d '_')
+          TEST_STACK_NAME="${TEST_STACK_NAME}-python${{env.PYTHON_VERSION}}-${ARCH_NAME}"
 
-      #    echo "Check if stack does not exist"
-      #    stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}" --output text)
+          echo "Check if stack does not exist"
+          stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}" --output text)
 
-      #    if [[ -n "$stack_exists" ]] ; then
-      #      echo "Found test deployment stack, removing..."
-      #      aws cloudformation delete-stack --stack-name "$TEST_STACK_NAME"
-      #      aws cloudformation wait stack-delete-complete --stack-name "$TEST_STACK_NAME"
-      #    fi
+          if [[ -n "$stack_exists" ]] ; then
+            echo "Found test deployment stack, removing..."
+            aws cloudformation delete-stack --stack-name "$TEST_STACK_NAME"
+            aws cloudformation wait stack-delete-complete --stack-name "$TEST_STACK_NAME"
+          fi
 
-       #   echo "Creating canary stack"
-       #   echo "Stack name: $TEST_STACK_NAME"
-       #   aws serverlessrepo create-cloud-formation-change-set \
-       #     --application-id arn:aws:serverlessrepo:${{ env.AWS_REGION }}:545611465610:applications/${{ env.SAR_NAME }} \
-       #     --stack-name "${TEST_STACK_NAME/serverlessrepo-/}" \
-       #     --capabilities CAPABILITY_NAMED_IAM
+          echo "Creating canary stack"
+          echo "Stack name: $TEST_STACK_NAME"
+          aws serverlessrepo create-cloud-formation-change-set \
+            --application-id arn:aws:serverlessrepo:${{ env.AWS_REGION }}:545611465610:applications/${{ env.SAR_NAME }} \
+            --stack-name "${TEST_STACK_NAME/serverlessrepo-/}" \
+            --capabilities CAPABILITY_NAMED_IAM
 
       #    CHANGE_SET_ID=$(aws cloudformation list-change-sets --stack-name "$TEST_STACK_NAME" --query 'Summaries[*].ChangeSetId' --output text)
       #    aws cloudformation wait change-set-create-complete --change-set-name "$CHANGE_SET_ID"
