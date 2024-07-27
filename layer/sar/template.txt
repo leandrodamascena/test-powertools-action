@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: <SAR_APP_NAME>
-    Description: "AWS Lambda Layer for aws-lambda-powertools"
+    Description: "AWS Lambda Layer for aws-lambda-powertools [<ARCHITECTURE>] with python <PYTHON_RUNTIME>"
     Author: Leandro Damascena
     SpdxLicenseId: Apache-2.0
     LicenseUrl: <LAYER_CONTENT_PATH>/LICENSE
@@ -14,7 +14,7 @@ Metadata:
     SourceCodeUrl: https://github.com/aws-powertools/powertools-lambda-python
 
 Transform: AWS::Serverless-2016-10-31
-Description: AWS Lambda Layer for aws-lambda-powertools with python <PYTHON_RUNTIME>
+Description: AWS Lambda Layer for aws-lambda-powertools [<ARCHITECTURE>] with python <PYTHON_RUNTIME>
 
 Resources:
   LambdaLayer:
