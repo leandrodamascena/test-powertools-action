@@ -195,10 +195,10 @@ jobs:
 
           echo "Waiting until stack deployment completes..."
 
-      #    echo "Exit with error if stack is not in CREATE_COMPLETE"
-      #    stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}")
-      #    if [[ -z "$stack_exists" ]] ; then
-      #      echo "Could find successful deployment, exit error..."
-      #      exit 1
-      #    fi
-      #    echo "Deployment successful"
+          echo "Exit with error if stack is not in CREATE_COMPLETE"
+          stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}")
+          if [[ -z "$stack_exists" ]] ; then
+            echo "Could find successful deployment, exit error..."
+            exit 1
+          fi
+          echo "Deployment successful"
