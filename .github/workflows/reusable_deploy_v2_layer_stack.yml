@@ -164,4 +164,4 @@ jobs:
           if-no-files-found: error
           retention-days: 1
       - name: CDK Deploy Canary
-        run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters DeployStage="${{ inputs.stage }}" --parameters HasARM64Support=${{ matrix.has_arm64_support }} "CanaryV2Stack-${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose
+        run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters DeployStage="${{ inputs.stage }}" --parameters HasARM64Support=${{ matrix.has_arm64_support }} "CanaryV3Stack-${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose
