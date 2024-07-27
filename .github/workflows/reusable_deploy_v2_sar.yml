@@ -188,12 +188,12 @@ jobs:
             --stack-name "${TEST_STACK_NAME/serverlessrepo-/}" \
             --capabilities CAPABILITY_NAMED_IAM
 
-      #    CHANGE_SET_ID=$(aws cloudformation list-change-sets --stack-name "$TEST_STACK_NAME" --query 'Summaries[*].ChangeSetId' --output text)
-      #    aws cloudformation wait change-set-create-complete --change-set-name "$CHANGE_SET_ID"
-      #    aws cloudformation execute-change-set --change-set-name "$CHANGE_SET_ID"
-      #    aws cloudformation wait stack-create-complete --stack-name "$TEST_STACK_NAME"
+          CHANGE_SET_ID=$(aws cloudformation list-change-sets --stack-name "$TEST_STACK_NAME" --query 'Summaries[*].ChangeSetId' --output text)
+          aws cloudformation wait change-set-create-complete --change-set-name "$CHANGE_SET_ID"
+          aws cloudformation execute-change-set --change-set-name "$CHANGE_SET_ID"
+          aws cloudformation wait stack-create-complete --stack-name "$TEST_STACK_NAME"
 
-      #    echo "Waiting until stack deployment completes..."
+          echo "Waiting until stack deployment completes..."
 
       #    echo "Exit with error if stack is not in CREATE_COMPLETE"
       #    stack_exists=$(aws cloudformation list-stacks --query "StackSummaries[?(StackName == '$TEST_STACK_NAME' && StackStatus == 'CREATE_COMPLETE')].{StackId:StackId, StackName:StackName, CreationTime:CreationTime, StackStatus:StackStatus}")
