@@ -10,7 +10,7 @@ app = cdk.App()
 POWERTOOLS_VERSION: str = app.node.try_get_context("version")
 PYTHON_VERSION: str = app.node.try_get_context("pythonVersion")
 p86 = PYTHON_VERSION.replace(".", "")
-SSM_PARAM_LAYER_ARN: str = f"/layers/powertools-layer-v3-x86-arn-{p86}"
+SSM_PARAM_LAYER_ARN: str = f"/layers/powertools-layer-v3-arn-{p86}"
 SSM_PARAM_LAYER_ARM64_ARN: str = f"/layers/powertools-layer-v3-arm64-arn-{p86}"
 
 if not POWERTOOLS_VERSION:
@@ -31,7 +31,7 @@ LayerStack(
 
 CanaryStack(
     app,
-    f"LayerV3Stack-{p86}",
+    f"CanaryV3Stack-{p86}",
     powertools_version=POWERTOOLS_VERSION,
     python_version=PYTHON_VERSION,
     ssm_paramter_layer_arn=SSM_PARAM_LAYER_ARN,
