@@ -82,7 +82,7 @@ jobs:
         #region: ["us-east-1","us-east-2","us-west-1","us-west-2"]
         #python-version: ["3.8","3.9","3.10","3.11","3.12"]
         region: ["us-east-1"]
-        python-version: ["3.8","3.9","3.10","3.10","3.12"]
+        python-version: ["3.8","3.9","3.10","3.11","3.12"]
         include:
             - region: "us-east-1"
               has_arm64_support: "true"
