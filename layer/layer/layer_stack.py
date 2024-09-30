@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 import jsii
 from aws_cdk import (
@@ -12,9 +12,9 @@ from aws_cdk import (
     RemovalPolicy,
     Stack,
 )
-from aws_cdk.aws_lambda import Architecture, CfnLayerVersionPermission
+from aws_cdk.aws_lambda import Architecture, CfnLayerVersionPermission, Runtime
 from aws_cdk.aws_ssm import StringParameter
-from leox_cdk_aws_lambda_powertools_layer import LambdaPowertoolsLayer
+from cdk_aws_lambda_powertools_layer import LambdaPowertoolsLayerPythonV3
 from constructs import Construct
 
 
@@ -38,18 +38,18 @@ class Layer(Construct):
         layer_version_name: str,
         powertools_version: str,
         python_version: str,
-        architecture: Optional[Architecture] = None,
-        **kwargs
+        architecture: Architecture | None = None,
+        **kwargs,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        layer = LambdaPowertoolsLayer(
+        layer = LambdaPowertoolsLayerPythonV3(
             self,
             "Layer",
             layer_version_name=layer_version_name,
             version=powertools_version,
-            include_extras=True,
             python_version=python_version,
+            include_extras=True,
             compatible_architectures=[architecture] if architecture else [],
         )
         layer.apply_removal_policy(RemovalPolicy.RETAIN)
@@ -75,13 +75,24 @@ class LayerStack(Stack):
         python_version: str,
         ssm_parameter_layer_arn: str,
         ssm_parameter_layer_arm64_arn: str,
-        **kwargs
+        **kwargs,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        p86 = python_version.replace(".", "")
-        layer_name_x86 = f"AWSLambdaPowertoolsPythonV3-python{p86}-x86"
-        layer_name_arm64 = f"AWSLambdaPowertoolsPythonV3-python{p86}-arm64"
+        python_version_normalized = python_version.replace(".", "")
+        layer_name_x86 = f"AWSLambdaPowertoolsPythonV3-{python_version_normalized}-x86"
+        layer_name_arm64 = f"AWSLambdaPowertoolsPythonV3-{python_version_normalized}-arm64"
+
+        if python_version == "python3.8":
+            python_version = Runtime.PYTHON_3_8
+        if python_version == "python3.9":
+            python_version = Runtime.PYTHON_3_9
+        if python_version == "python3.10":
+            python_version = Runtime.PYTHON_3_10
+        if python_version == "python3.11":
+            python_version = Runtime.PYTHON_3_11
+        if python_version == "python3.12":
+            python_version = Runtime.PYTHON_3_12
 
         has_arm64_support = CfnParameter(
             self,
@@ -107,7 +118,7 @@ class LayerStack(Stack):
 
         layer_single = Layer(
             self,
-            f"LayerSingle-{p86}",
+            f"LayerSingle-{python_version_normalized}",
             layer_version_name=layer_name_x86,
             python_version=python_version,
             powertools_version=powertools_version,
@@ -117,10 +128,10 @@ class LayerStack(Stack):
         Aspects.of(
             StringParameter(
                 self,
-                f"SingleVersionArn-{p86}",
+                f"SingleVersionArn-{python_version_normalized}",
                 parameter_name=ssm_parameter_layer_arn,
                 string_value=layer_single.layer_version_arn,
-            )
+            ),
         ).add(ApplyCondition(has_no_arm64_condition))
 
         # The following code is used when the region has support for ARM64 Lambdas. In this case, we explicitly
@@ -130,7 +141,7 @@ class LayerStack(Stack):
 
         layer = Layer(
             self,
-            f"Layer-{p86}",
+            f"Layer-{python_version_normalized}",
             layer_version_name=layer_name_x86,
             powertools_version=powertools_version,
             python_version=python_version,
@@ -141,13 +152,12 @@ class LayerStack(Stack):
         Aspects.of(
             StringParameter(
                 self,
-                f"VersionArn-{p86}",
+                f"VersionArn-{python_version_normalized}",
                 parameter_name=ssm_parameter_layer_arn,
                 string_value=layer.layer_version_arn,
-            )
+            ),
         ).add(ApplyCondition(has_arm64_condition))
 
-        # MISSING OUTPUT
         CfnOutput(
             self,
             "LatestLayerArn",
@@ -162,7 +172,7 @@ class LayerStack(Stack):
 
         layer_arm64 = Layer(
             self,
-            f"Layer-ARM64-{p86}",
+            f"Layer-ARM64-{python_version_normalized}",
             layer_version_name=layer_name_arm64,
             powertools_version=powertools_version,
             python_version=python_version,
@@ -172,7 +182,7 @@ class LayerStack(Stack):
 
         StringParameter(
             self,
-            f"Arm64VersionArn-{p86}",
+            f"Arm64VersionArn-{python_version_normalized}",
             parameter_name=ssm_parameter_layer_arm64_arn,
             string_value=Fn.condition_if(
                 has_arm64_condition.logical_id,
@@ -181,7 +191,6 @@ class LayerStack(Stack):
             ).to_string(),
         )
 
-        # MISSING OUTPUT
-        Aspects.of(
-            CfnOutput(self, "LatestLayerArm64Arn", value=layer_arm64.layer_version_arn)
-        ).add(ApplyCondition(has_arm64_condition))
+        Aspects.of(CfnOutput(self, "LatestLayerArm64Arn", value=layer_arm64.layer_version_arn)).add(
+            ApplyCondition(has_arm64_condition),
+        )

@@ -80,9 +80,9 @@ jobs:
         # To get a list of current regions, use:
         # aws ec2 describe-regions --all-regions --query "Regions[].RegionName" --output text | tr "\t" "\n" | sort
         region: ["us-east-1","us-east-2","us-west-1","us-west-2"]
-        python-version: ["3.8","3.9","3.10","3.11","3.12"]
+        #python-version: ["3.8","3.9","3.10","3.11","3.12"]
         #region: ["us-east-1", ]
-        #python-version: ["3.8"]
+        python-version: ["3.8"]
         include:
             - region: "us-east-1"
               has_arm64_support: "true"
@@ -146,14 +146,14 @@ jobs:
           echo "LAYER_VERSION=${LAYER_VERSION}" >> $GITHUB_OUTPUT
       - name: CDK Deploy Layer
         run:  |
-          npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} "LayerV3Stack-${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose --outputs-file cdk-outputs.json
+          npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters HasARM64Support=${{ matrix.has_arm64_support }} "LayerV3Stack-python${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose --outputs-file cdk-outputs.json
           cat cdk-outputs.json
       - name: Store latest Layer ARN
         if: ${{ inputs.stage == 'BETA' }}
         run: |
           mkdir cdk-layer-stack
-          jq -r -c ".[\"LayerV3Stack-${{steps.constants.outputs.PYTHON_VERSION}}\"].LatestLayerArn" cdk-outputs.json > cdk-layer-stack/${{steps.constants.outputs.LAYER_VERSION}}
-          jq -r -c ".[\"LayerV3Stack-${{steps.constants.outputs.PYTHON_VERSION}}\"].LatestLayerArm64Arn" cdk-outputs.json >> cdk-layer-stack/${{steps.constants.outputs.LAYER_VERSION}}
+          jq -r -c ".[\"LayerV3Stack-python${{steps.constants.outputs.PYTHON_VERSION}}\"].LatestLayerArn" cdk-outputs.json > cdk-layer-stack/${{steps.constants.outputs.LAYER_VERSION}}
+          jq -r -c ".[\"LayerV3Stack-python${{steps.constants.outputs.PYTHON_VERSION}}\"].LatestLayerArm64Arn" cdk-outputs.json >> cdk-layer-stack/${{steps.constants.outputs.LAYER_VERSION}}
           cat cdk-layer-stack/${{steps.constants.outputs.LAYER_VERSION}}
       - name: Save Layer ARN artifact
         if: ${{ inputs.stage == 'BETA' }}
@@ -164,4 +164,4 @@ jobs:
           if-no-files-found: error
           retention-days: 1
       - name: CDK Deploy Canary
-        run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters DeployStage="${{ inputs.stage }}" --parameters HasARM64Support=${{ matrix.has_arm64_support }} "CanaryV3Stack-${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose
+        run: npx cdk deploy --app cdk.out --context region=${{ matrix.region }} --parameters DeployStage="${{ inputs.stage }}" --parameters HasARM64Support=${{ matrix.has_arm64_support }} "CanaryV3Stack-python${{steps.constants.outputs.PYTHON_VERSION}}" --require-approval never --verbose

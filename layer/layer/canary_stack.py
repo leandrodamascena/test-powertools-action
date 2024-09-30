@@ -25,9 +25,7 @@ from aws_cdk.aws_ssm import StringParameter
 from aws_cdk.custom_resources import Provider
 from constructs import Construct
 
-VERSION_TRACKING_EVENT_BUS_ARN: str = (
-    "arn:aws:events:eu-central-1:027876851704:event-bus/VersionTrackingEventBus"
-)
+VERSION_TRACKING_EVENT_BUS_ARN: str = "arn:aws:events:eu-central-1:027876851704:event-bus/VersionTrackingEventBus"
 
 
 @jsii.implements(IAspect)
@@ -53,9 +51,7 @@ class CanaryStack(Stack):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        deploy_stage = CfnParameter(
-            self, "DeployStage", description="Deployment stage for canary"
-        ).value_as_string
+        deploy_stage = CfnParameter(self, "DeployStage", description="Deployment stage for canary").value_as_string
 
         has_arm64_support = CfnParameter(
             self,
@@ -72,7 +68,9 @@ class CanaryStack(Stack):
         )
 
         layer_arn = StringParameter.from_string_parameter_attributes(
-            self, "LayerVersionArnParam", parameter_name=ssm_paramter_layer_arn
+            self,
+            "LayerVersionArnParam",
+            parameter_name=ssm_paramter_layer_arn,
         ).string_value
         Canary(
             self,
@@ -115,11 +113,9 @@ class Canary(Construct):
     ):
         super().__init__(scope, construct_id)
 
-        p86 = python_version.replace(".", "")
+        python_version_normalized = python_version.replace(".", "")
 
-        layer = LayerVersion.from_layer_version_arn(
-            self, "PowertoolsLayer", layer_version_arn=layer_arn
-        )
+        layer = LayerVersion.from_layer_version_arn(self, "PowertoolsLayer", layer_version_arn=layer_arn)
 
         execution_role = Role(
             self,
@@ -128,33 +124,29 @@ class Canary(Construct):
         )
 
         execution_role.add_managed_policy(
-            ManagedPolicy.from_aws_managed_policy_name(
-                "service-role/AWSLambdaBasicExecutionRole"
-            )
+            ManagedPolicy.from_aws_managed_policy_name("service-role/AWSLambdaBasicExecutionRole"),
         )
 
         execution_role.add_to_policy(
-            PolicyStatement(
-                effect=Effect.ALLOW, actions=["lambda:GetFunction"], resources=["*"]
-            )
+            PolicyStatement(effect=Effect.ALLOW, actions=["lambda:GetFunction"], resources=["*"]),
         )
 
-        if python_version == "3.8":
+        if python_version == "python3.8":
             runtime = Runtime.PYTHON_3_8
-        elif python_version == "3.9":
+        elif python_version == "python3.9":
             runtime = Runtime.PYTHON_3_9
-        elif python_version == "3.10":
+        elif python_version == "python3.10":
             runtime = Runtime.PYTHON_3_10
-        elif python_version == "3.11":
+        elif python_version == "python3.11":
             runtime = Runtime.PYTHON_3_11
-        elif python_version == "3.12":
+        elif python_version == "python3.12":
             runtime = Runtime.PYTHON_3_12
-        else: 
+        else:
             raise ValueError("Unsupported Python version")
 
         canary_lambda = Function(
             self,
-            f"CanaryLambdaFunction-{p86}",
+            f"CanaryLambdaFunction-{python_version_normalized}",
             code=Code.from_asset("layer/canary"),
             handler="app.on_event",
             layers=[layer],
@@ -177,13 +169,13 @@ class Canary(Construct):
                 effect=Effect.ALLOW,
                 actions=["events:PutEvents"],
                 resources=[VERSION_TRACKING_EVENT_BUS_ARN],
-            )
+            ),
         )
 
         # custom resource provider configuration
         provider = Provider(
             self,
-            f"CanaryCustomResource-{p86}",
+            "CanaryCustomResource",
             on_event_handler=canary_lambda,
             log_retention=RetentionDays.TEN_YEARS,
         )
