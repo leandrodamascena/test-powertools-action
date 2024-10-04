@@ -41,7 +41,7 @@ class LambdaPowertoolsLayerPythonV3(Stack):
                  include_extras: bool = True,
                  architecture: lambda_.Architecture = lambda_.Architecture.X86_64,
                  powertools_version: str = "",
-                 layer_name: str = "") -> None:
+                 layer_name: str = "") -> lambda_.LayerVersion:
         
         super().__init__(scope, construct_id)
 
@@ -55,7 +55,7 @@ class LambdaPowertoolsLayerPythonV3(Stack):
         else:
             docker_architecture: str = "linux/arm64"
 
-        lambda_.LayerVersion(
+        return lambda_.LayerVersion(
             self,
             "LayerVersion",
             code=lambda_.Code.from_docker_build(
