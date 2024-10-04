@@ -47,11 +47,11 @@ class Layer(Construct):
         layer = LambdaPowertoolsLayerPythonV3(
             self,
             "Layer",
-            layer_version_name=layer_version_name,
-            version=powertools_version,
+            layer_name=layer_version_name,
+            powertools_version=powertools_version,
             python_version=python_version,
             include_extras=True,
-            compatible_architectures=[architecture] if architecture else [],
+            architecture=[architecture] if architecture else [],
         )
         layer.apply_removal_policy(RemovalPolicy.RETAIN)
 
