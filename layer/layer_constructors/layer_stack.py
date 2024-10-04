@@ -6,7 +6,7 @@ from constructs import Construct
 
 from layer_constructors.helpers import construct_build_args
 
-class LambdaPowertoolsLayerPythonV3(Stack):
+class LambdaPowertoolsLayerPythonV3(lambda_.LayerVersion):
 
     """
     A CDK Stack that creates a Lambda Layer for Powertools for AWS Lambda (Python) V3.
@@ -41,7 +41,7 @@ class LambdaPowertoolsLayerPythonV3(Stack):
                  include_extras: bool = True,
                  architecture: lambda_.Architecture = lambda_.Architecture.X86_64,
                  powertools_version: str = "",
-                 layer_name: str = "") -> lambda_.LayerVersion:
+                 layer_name: str = "") -> None:
         
         super().__init__(scope, construct_id)
 
@@ -55,7 +55,7 @@ class LambdaPowertoolsLayerPythonV3(Stack):
         else:
             docker_architecture: str = "linux/arm64"
 
-        return lambda_.LayerVersion(
+        lambda_.LayerVersion(
             self,
             "LayerVersion",
             code=lambda_.Code.from_docker_build(
