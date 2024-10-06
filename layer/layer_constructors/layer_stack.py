@@ -34,8 +34,6 @@ class LambdaPowertoolsLayerPythonV3(lambda_.LayerVersion):
         ...     layer_name="MyCustomPowertoolsLayer")
 
     """
-    
-
 
     def __init__(self, 
                  scope: Construct, 
