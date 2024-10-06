@@ -43,9 +43,7 @@ class LambdaPowertoolsLayerPythonV3(lambda_.LayerVersion):
                  powertools_version: str = "",
                  layer_name: str = "") -> None:
         
-        super().__init__(scope, construct_id)
-
-
+        
         docker_file_path = os.path.join(os.path.dirname(__file__), "../docker")
 
         python_normalized_version: str = python_version.to_string().replace("python","")
@@ -55,25 +53,24 @@ class LambdaPowertoolsLayerPythonV3(lambda_.LayerVersion):
         else:
             docker_architecture: str = "linux/arm64"
 
-        lambda_.LayerVersion(
-            self,
-            "LayerVersion",
-            code=lambda_.Code.from_docker_build(
-                docker_file_path,
-                build_args={
-                    "PACKAGE_SUFFIX": construct_build_args(
-                        include_extras,
-                        powertools_version,
-                    ),
-                    "PYTHON_VERSION": python_normalized_version,
-                },
-                platform=docker_architecture,
-            ),
-            layer_version_name=layer_name,
-            license="MIT-0",
-            compatible_runtimes=[python_version],
-            description=f"Powertools for AWS Lambda (Python) V3 [{architecture.to_string()} - Python {python_normalized_version}]"
-            + (" with extra dependencies" if include_extras else "")
-            + (f" version {powertools_version}" if powertools_version else " latest version"),
-            compatible_architectures=[architecture] if architecture else None,
+        super().__init__(scope, 
+                         construct_id,
+                         code=lambda_.Code.from_docker_build(
+                            docker_file_path,
+                            build_args={
+                                "PACKAGE_SUFFIX": construct_build_args(
+                                    include_extras,
+                                    powertools_version,
+                                ),
+                                "PYTHON_VERSION": python_normalized_version,
+                            },
+                            platform=docker_architecture,
+                        ),
+                        layer_version_name=layer_name,
+                        license="MIT-0",
+                        compatible_runtimes=[python_version],
+                        description=f"Powertools for AWS Lambda (Python) V3 [{architecture.to_string()} - Python {python_normalized_version}]"
+                        + (" with extra dependencies" if include_extras else "")
+                        + (f" version {powertools_version}" if powertools_version else " latest version"),
+                        compatible_architectures=[architecture] if architecture else None,
         )
