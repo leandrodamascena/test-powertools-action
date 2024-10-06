@@ -32,8 +32,9 @@ class LambdaPowertoolsLayerPythonV3(lambda_.LayerVersion):
         ...     architecture=lambda_.Architecture.ARM_64,
         ...     powertools_version="2.10.0",
         ...     layer_name="MyCustomPowertoolsLayer")
-        
+
     """
+    
 
 
     def __init__(self, 
