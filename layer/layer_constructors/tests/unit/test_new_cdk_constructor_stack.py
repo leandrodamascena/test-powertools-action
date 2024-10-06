@@ -88,7 +88,7 @@ def test_with_custom_name():
     app = aws_cdk.App()
     stack = aws_cdk.Stack(app, "TestStack")
     LambdaPowertoolsLayerPythonV3(
-        app,
+        stack,
         "LambdaPowertoolsLayerPythonV3",
         layer_name="custom_name_layer"
     )
@@ -107,7 +107,7 @@ def test_with_extras():
     app = aws_cdk.App()
     stack = aws_cdk.Stack(app, "TestStack")
     LambdaPowertoolsLayerPythonV3(
-        app,
+        stack,
         "LambdaPowertoolsLayerPythonV3",
         layer_name="custom_name_layer",
         include_extras=True,
@@ -129,7 +129,7 @@ def test_with_extras_arm64():
     app = aws_cdk.App()
     stack = aws_cdk.Stack(app, "TestStack")
     LambdaPowertoolsLayerPythonV3(
-        app,
+        stack,
         "LambdaPowertoolsLayerPythonV3",
         layer_name="custom_name_layer",
         include_extras=True,
