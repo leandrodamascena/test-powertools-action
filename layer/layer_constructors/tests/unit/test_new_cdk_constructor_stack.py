@@ -11,10 +11,9 @@ from aws_cdk import aws_lambda as lambda_
 def test_with_no_configuration_constructor():
 
     app = aws_cdk.App()
-    stack = LambdaPowertoolsLayerPythonV3(
-        app,
-        "LambdaPowertoolsLayerPythonV3"
-    )
+    stack = aws_cdk.Stack(app, "TestStack")
+    LambdaPowertoolsLayerPythonV3(stack, "LambdaPowertoolsLayerPythonV3")
+
     template = assertions.Template.from_stack(stack)
 
     template.has_resource_properties("AWS::Lambda::LayerVersion", {
@@ -31,8 +30,10 @@ def test_with_different_python_version_x86_64(python_version):
     inner_python_version: lambda_.Runtime = python_version
 
     app = aws_cdk.App()
-    stack = LambdaPowertoolsLayerPythonV3(
-        app,
+    stack = aws_cdk.Stack(app, "TestStack")
+
+    LambdaPowertoolsLayerPythonV3(
+        stack,
         "LambdaPowertoolsLayerPythonV3",
         python_version=inner_python_version,
         powertools_version="3.0.0",
@@ -58,8 +59,9 @@ def test_with_different_python_version_arm64(python_version):
     inner_python_version: lambda_.Runtime = python_version
 
     app = aws_cdk.App()
-    stack = LambdaPowertoolsLayerPythonV3(
-        app,
+    stack = aws_cdk.Stack(app, "TestStack")
+    LambdaPowertoolsLayerPythonV3(
+        stack,
         "LambdaPowertoolsLayerPythonV3",
         python_version=inner_python_version,
         architecture=lambda_.Architecture.ARM_64,
@@ -84,7 +86,8 @@ def test_with_different_python_version_arm64(python_version):
 def test_with_custom_name():
 
     app = aws_cdk.App()
-    stack = LambdaPowertoolsLayerPythonV3(
+    stack = aws_cdk.Stack(app, "TestStack")
+    LambdaPowertoolsLayerPythonV3(
         app,
         "LambdaPowertoolsLayerPythonV3",
         layer_name="custom_name_layer"
@@ -102,7 +105,8 @@ def test_with_custom_name():
 def test_with_extras():
 
     app = aws_cdk.App()
-    stack = LambdaPowertoolsLayerPythonV3(
+    stack = aws_cdk.Stack(app, "TestStack")
+    LambdaPowertoolsLayerPythonV3(
         app,
         "LambdaPowertoolsLayerPythonV3",
         layer_name="custom_name_layer",
@@ -123,7 +127,8 @@ def test_with_extras():
 def test_with_extras_arm64():
 
     app = aws_cdk.App()
-    stack = LambdaPowertoolsLayerPythonV3(
+    stack = aws_cdk.Stack(app, "TestStack")
+    LambdaPowertoolsLayerPythonV3(
         app,
         "LambdaPowertoolsLayerPythonV3",
         layer_name="custom_name_layer",
