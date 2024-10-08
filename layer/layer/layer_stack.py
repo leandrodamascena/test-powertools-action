@@ -81,7 +81,7 @@ class LayerStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         python_version_normalized = python_version.replace(".", "")
-        layer_name_x86_64 = f"AWSLambdaPowertoolsPythonV3-{python_version_normalized}-x86_64-new"
+        layer_name_x86_64 = f"AWSLambdaPowertoolsPythonV3-{python_version_normalized}-x86_64-newleo"
         layer_name_arm64 = f"AWSLambdaPowertoolsPythonV3-{python_version_normalized}-arm64"
 
         if python_version == "python3.8":
