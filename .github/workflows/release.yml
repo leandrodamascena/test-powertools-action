@@ -137,6 +137,6 @@ jobs:
       stage: "BETA"
       artefact-name: "cdk-layer-artefact"
       environment: "layer-beta"
-      package-version: ${{ inputs.latest_published_version }}
+      package-version: ${{ inputs.version_to_publish }}
       source_code_artifact_name: ${{ inputs.source_code_artifact_name }}
       source_code_integrity_hash: ${{ inputs.source_code_integrity_hash }}

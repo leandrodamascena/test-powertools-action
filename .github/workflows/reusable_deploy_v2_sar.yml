@@ -127,16 +127,16 @@ jobs:
           ARCH_NAME=$(echo ${{ matrix.architecture }} | tr -d '_')
           SAR_NAME="${SAR_NAME}-python${{env.PYTHON_VERSION}}-${ARCH_NAME}"
           echo SAR_NAME="${SAR_NAME}" >> "$GITHUB_ENV"
-      - name: Normalize semantic version
-        id: semantic-version # v2.0.0a0 -> v2.0.0-a0
-        env:
-          VERSION: ${{ inputs.package-version }}
-        run: |
-          VERSION="${VERSION/a/-a}"
-          echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
+      #- name: Normalize semantic version
+      #  id: semantic-version # v2.0.0a0 -> v2.0.0-a0
+      #  env:
+      #    VERSION: ${{ inputs.package-version }}
+      #  run: |
+      ##    VERSION="${VERSION/a/-a}"
+      #    echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
       - name: Prepare SAR App
-        env:
-          VERSION: ${{ steps.semantic-version.outputs.VERSION }}
+        #env:
+        #  VERSION: ${{ steps.semantic-version.outputs.VERSION }}
         run: |
           # From the generated LayerStack cdk.out artifact, find the layer asset path for the correct architecture.
           # We'll use this as the source directory of our SAR. This way we are re-using the same layer asset for our SAR.
@@ -145,12 +145,12 @@ jobs:
           echo "Normalizing the asset variable"
           asset=$(echo $asset_cdk | sed -E 's/^(asset\.[^.]+).*\1/\1/')
 
-          echo $VERSION
+          echo ${{ inputs.package-version }}
           echo $asset
 
           # fill in the SAR SAM template
           sed \
-            -e "s|<VERSION>|3.0.0|g" \
+            -e "s|<VERSION>|${{ inputs.package-version }}/g" \
             -e "s/<SAR_APP_NAME>/${{ env.SAR_NAME }}/g" \
             -e "s|<LAYER_CONTENT_PATH>|./cdk.out/$asset|g" \
             -e "s|<PYTHON_RUNTIME>|${{ matrix.python-version }}|g" \
