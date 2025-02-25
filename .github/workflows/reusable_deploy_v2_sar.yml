@@ -150,7 +150,7 @@ jobs:
 
           # fill in the SAR SAM template
           sed \
-            -e "s|<VERSION>|${{ env.VERSION }}|g" \
+            -e "s|<VERSION>|3.0.0|g" \
             -e "s/<SAR_APP_NAME>/${{ env.SAR_NAME }}/g" \
             -e "s|<LAYER_CONTENT_PATH>|./cdk.out/$asset|g" \
             -e "s|<PYTHON_RUNTIME>|${{ matrix.python-version }}|g" \
