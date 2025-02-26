@@ -129,7 +129,6 @@ jobs:
       source_code_integrity_hash: ${{ inputs.source_code_integrity_hash }}
 
   sar-beta:
-    needs: beta  # canaries run on Layer Beta env
     permissions:
       # lower privilege propagated from parent workflow (release.yml)
       id-token: write
