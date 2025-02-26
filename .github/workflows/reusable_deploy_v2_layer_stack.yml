@@ -80,9 +80,9 @@ jobs:
         # To get a list of current regions, use:
         # aws ec2 describe-regions --all-regions --query "Regions[].RegionName" --output text | tr "\t" "\n" | sort
         #region: ["us-east-1","us-east-2","us-west-1","us-west-2"]
-        #python-version: ["3.9","3.10","3.11","3.12","3.13"]
+        python-version: ["3.9","3.10","3.11","3.12","3.13"]
         region: ["us-east-1", "us-east-2"]
-        python-version: ["3.9"]
+        #python-version: ["3.9"]
         include:
             - region: "us-east-1"
               has_arm64_support: "true"
