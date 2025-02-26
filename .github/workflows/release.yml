@@ -112,7 +112,6 @@ jobs:
     
 
   beta:
-    if: ${{ !inputs.skip_lambda_layer }}
     needs: build-layer
     # lower privilege propagated from parent workflow (release.yml)
     permissions:
@@ -127,8 +126,28 @@ jobs:
       latest_published_version: ${{ inputs.latest_published_version }}
       source_code_artifact_name: ${{ inputs.source_code_artifact_name }}
       source_code_integrity_hash: ${{ inputs.source_code_integrity_hash }}
+  
+  prod:
+    if: ${{ !inputs.skip_lambda_layer }}
+    needs: beta
+    # lower privilege propagated from parent workflow (release-v3.yml)
+    permissions:
+      id-token: write
+      contents: read
+      pages: write             # docs will be updated with latest Layer ARNs
+      pull-requests: write     # creation-action will create a PR with Layer ARN updates
+    uses: ./.github/workflows/reusable_deploy_v2_layer_stack.yml
+    secrets: inherit
+    with:
+      stage: "PROD"
+      artefact-name: "cdk-layer-artefact"
+      environment: "layer-beta"
+      latest_published_version: ${{ inputs.latest_published_version }}
+      source_code_artifact_name: ${{ inputs.source_code_artifact_name }}
+      source_code_integrity_hash: ${{ inputs.source_code_integrity_hash }}
 
   sar-beta:
+    needs: beta  # canaries run on Layer Beta env
     permissions:
       # lower privilege propagated from parent workflow (release.yml)
       id-token: write
