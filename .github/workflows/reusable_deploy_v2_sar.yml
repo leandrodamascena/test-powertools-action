@@ -206,6 +206,7 @@ jobs:
           echo "Deployment successful"
 
       - name: Publish SAR
+        if: ${{ inputs.stage == 'PROD' }}
         run: |
           # wait until SAR registers the app, otherwise it fails to make it public
           sleep 15
