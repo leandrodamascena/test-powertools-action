@@ -16,6 +16,10 @@ on:
         default: false
         type: boolean
         required: false
+      skip_lambda_layer:
+        description: "Skip publishing Lambda Layers as it can publish duplicated versions of the same layer. Useful for semi-failed releases"
+        type: boolean
+        required: false
       skip_code_quality:
         description: "Skip tests, linting, and baseline. Only use if release fail for reasons beyond our control and you need a quick release."
         default: false
@@ -41,8 +45,8 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        python-version: ["3.9","3.10","3.11","3.12","3.13"]
-        #python-version: ["3.13"]
+        #python-version: ["3.9","3.10","3.11","3.12","3.13"]
+        python-version: ["3.9"]
     env:
       PYTHON: "${{ matrix.python-version }}"
     defaults:
@@ -108,6 +112,7 @@ jobs:
     
 
   beta:
+    if: ${{ !inputs.skip_lambda_layer }}
     needs: build-layer
     # lower privilege propagated from parent workflow (release.yml)
     permissions:

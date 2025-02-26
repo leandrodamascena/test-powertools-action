@@ -38,7 +38,7 @@ permissions:
 env:
   NODE_VERSION: 18.20.4
   AWS_REGION: us-east-1
-  SAR_NAME: aws-lambda-powertools-python-layer
+  SAR_NAME: aws-lambda-powertools-python-layer-v3
   TEST_STACK_NAME: serverlessrepo-v3-powertools-layer-test-stack
   RELEASE_COMMIT: ${{ github.sha }}  # it gets propagated from the caller for security reasons
 
@@ -77,8 +77,8 @@ jobs:
     strategy:
       matrix:
         architecture: ["x86_64", "arm64"]
-        python-version: ["3.9","3.10","3.11","3.12","3.13"]
-        #python-version: ["3.13"]
+        #python-version: ["3.9","3.10","3.11","3.12","3.13"]
+        python-version: ["3.9"]
     steps:
       - name: checkout
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
@@ -124,7 +124,7 @@ jobs:
             SAR_NAME="test-${SAR_NAME}"
           fi
 
-          ARCH_NAME=$(echo ${{ matrix.architecture }} | tr -d '_')
+          ARCH_NAME=$(echo ${{ matrix.architecture }} | tr '_' '-')
           SAR_NAME="${SAR_NAME}-python${{env.PYTHON_VERSION}}-${ARCH_NAME}"
           echo SAR_NAME="${SAR_NAME}" >> "$GITHUB_ENV"
       #- name: Normalize semantic version
@@ -204,3 +204,13 @@ jobs:
             exit 1
           fi
           echo "Deployment successful"
+
+      - name: Publish SAR
+        if: ${{ inputs.stage == 'PROD' }}
+        run: |
+          # wait until SAR registers the app, otherwise it fails to make it public
+          sleep 15
+          echo "Make SAR app public"
+          aws serverlessrepo put-application-policy \
+            --application-id arn:aws:serverlessrepo:${{ env.AWS_REGION }}:${{ steps.aws-credentials-sar-role.outputs.aws-account-id }}:applications/${{ env.SAR_NAME }} \
+            --statements Principals='*',Actions=Deploy
