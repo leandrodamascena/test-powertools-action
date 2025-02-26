@@ -145,12 +145,12 @@ jobs:
           echo "Normalizing the asset variable"
           asset=$(echo $asset_cdk | sed -E 's/^(asset\.[^.]+).*\1/\1/')
 
-          echo ${{ inputs.package-version }}
+          VERSION=$(echo ${{ inputs.package-version }} | sed 's/^v//')
           echo $asset
 
           # fill in the SAR SAM template
           sed \
-            -e "s|<VERSION>|${{ inputs.package-version }}|g" \
+            -e "s|<VERSION>|${$VERSION}|g" \
             -e "s/<SAR_APP_NAME>/${{ env.SAR_NAME }}/g" \
             -e "s|<LAYER_CONTENT_PATH>|./cdk.out/$asset|g" \
             -e "s|<PYTHON_RUNTIME>|${{ matrix.python-version }}|g" \
